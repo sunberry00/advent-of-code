@@ -31,8 +31,19 @@ def part_one():
             case [size, filename]:
                 add_size_to_all_folders(folders, current_path, size)
     
-    sizes = [size for folder, size in folders.items() if size < 100000]
-    print(sum(sizes))
+    total_disk_space = 70_000_000
+    required_space = 30_000_000
+    used_space = folders['/']
+    unused_space = total_disk_space - used_space
+    space_to_free = required_space - unused_space
+    
+    smallest_dir_size = min(
+        size for size in folders.values() 
+        if size >= space_to_free
+    )
+    
+    print(smallest_dir_size)
+    
                 
     
 
