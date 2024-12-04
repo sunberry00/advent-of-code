@@ -1,7 +1,7 @@
 import typing
 
 
-class PuzzleSolver:
+class Day04:
     XMAS_PATTERN = "XMAS"
 
     @staticmethod
@@ -139,8 +139,8 @@ def main():
     with open("input.txt", "r") as file:
         puzzle = file.read().split("\n")
 
-    print("Part 1:", PuzzleSolver.solve_part1(puzzle))
-    print("Part 2:", PuzzleSolver.solve_part2(puzzle))
+    print("Part 1:", Day04.solve_part1(puzzle))
+    print("Part 2:", Day04.solve_part2(puzzle))
 
 
 if __name__ == "__main__":
