@@ -44,18 +44,61 @@ class Day05:
 
         print(sum(middle_page_numbers))
 
-        return correct_pages
+        return incorrect_pages
+
+    @classmethod
+    def correct_page(cls, page, left, right):
+        page[page.index(left)], page[page.index(right)] = page[page.index(right)], page[page.index(left)]
+        return page
+
+    @classmethod
+    def check_all_pages(cls, pages, rules):
+        for page in pages:
+            for left, right in rules:
+                if Day05.is_rule_applied(left, right, page):
+                    if Day05.check_rule(left, right, page):
+                        continue
+                    else:
+                        return False
+        return True
+
+    @classmethod
+    def remove_duplicate_arrays(cls, input_array):
+        unique_arrays = []
+        for arr in input_array:
+            if arr not in unique_arrays:
+                unique_arrays.append(arr)
+        return unique_arrays
 
     @classmethod
     def solve_part2(cls, pages, rules):
-        print(pages)
+        corrected_pages = []
+        check = False
+        while not check:
+            for page in pages:
+                for left, right in rules:
+                    if Day05.is_rule_applied(left, right, page):
+                        if Day05.check_rule(left, right, page):
+                            continue
+                        else:
+                            new_page = Day05.correct_page(page, left, right)
+                            corrected_pages.append(new_page)
+                            break
 
+
+            check = Day05.check_all_pages(corrected_pages, rules)
+            pages = corrected_pages
+
+        corrected_pages = Day05.remove_duplicate_arrays(corrected_pages)
+
+        middle_page_numbers = [page[len(page) // 2] for page in corrected_pages]
+
+        print(sum(middle_page_numbers))
 
 
 def main():
-    rules, pages = Day05.parse_import_file("test.txt")
-    correct_pages = Day05.solve_part1(rules, pages)
-    incorrect_pages = set(pages).difference(set(correct_pages))
+    rules, pages = Day05.parse_import_file("input.txt")
+    incorrect_pages = Day05.solve_part1(rules, pages)
     Day05.solve_part2(incorrect_pages, rules)
 
 
