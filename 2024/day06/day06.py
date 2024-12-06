@@ -41,6 +41,19 @@ class Position:
         delta_row, delta_col = direction.delta
         return Position(self.row + delta_row, self.col + delta_col)
 
+    def __str__(self) -> str:
+        return f"{self.col}, {self.row}"  # Note: x = col, y = row
+
+
+@dataclass
+class PathStep:
+    """Represents a single step in the path."""
+    position: Position
+    direction: Direction
+
+    def __str__(self) -> str:
+        return f"{self.position}, {self.direction.symbol}"
+
 
 class GridNavigator:
     """Handles navigation and path marking on a 2D grid."""
@@ -53,6 +66,13 @@ class GridNavigator:
         self.direction = Direction.from_symbol(self.grid[self.position.row][self.position.col])
         if not self.direction:
             raise ValueError(f"Invalid direction symbol at starting position")
+        self.path: List[PathStep] = []
+        # Record initial position
+        self._record_step()
+
+    def _record_step(self):
+        """Records current position and direction in path."""
+        self.path.append(PathStep(Position(self.position.row, self.position.col), self.direction))
 
     def _find_start_position(self) -> Optional[Position]:
         """Finds the starting position marked by a direction symbol."""
@@ -84,6 +104,7 @@ class GridNavigator:
 
         # Move to next position
         self.position = self.position.move(self.direction)
+        self._record_step()
         return True
 
     def move_forward_until_obstacle(self) -> bool:
@@ -99,6 +120,7 @@ class GridNavigator:
         while True:
             if self.move_forward_until_obstacle():
                 self.direction = self.direction.turn_right()
+                self._record_step()  # Record the turn
             else:
                 # Mark final position before stopping
                 self.grid[self.position.row][self.position.col] = 'X'
@@ -113,18 +135,25 @@ class GridNavigator:
         for row in self.grid:
             print(''.join(row))
 
+    def print_path(self):
+        """Prints the full path in x, y, direction format."""
+        for step in self.path:
+            print(step)
+
 
 def solve_part1(input_path: str) -> int:
-    """Solves part 1 of the puzzle."""
+    """Solves part 1 of the puzzle and prints the path."""
     content = Path(input_path).read_text()
     navigator = GridNavigator(content)
     navigator.navigate()
+    print("\nPath taken:")
+    navigator.print_path()
     return navigator.count_visited_positions()
 
 
 def main():
-    result = solve_part1("test.txt")
-    print(f"Part 1 solution: {result}")
+    result = solve_part1("input.txt")
+    print(f"\nPart 1 solution: {result}")
 
 
 if __name__ == "__main__":
