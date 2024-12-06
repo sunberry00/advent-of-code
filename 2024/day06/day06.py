@@ -11,6 +11,7 @@ class Day06:
     def __init__(self, input_str):
         self.grid = [list(line) for line in input_str.strip().splitlines()]
         self.__find_start_coords()
+        self.visited_positions = set()
 
     def __find_start_coords(self):
         symbols = ['^', '>', 'v', '<']
@@ -41,6 +42,7 @@ class Day06:
 
     def step_forward(self):
         self.grid[self.current_X][self.current_Y] = 'X'
+        self.visited_positions.add((self.current_X, self.current_Y, self. current_direction))
         if self.is_move_possible():
             match self.current_direction.value:
                 case '^':
@@ -90,8 +92,8 @@ class Day06:
                 return
 
     def get_visited_positions(self):
-        visited_row = [line.count('X') for line in self.grid]
-        return sum(visited_row)
+        visited = set((x, y) for x, y, _ in self.visited_positions)
+        return len(visited)
 
 def part01():
     with open("input.txt", 'r') as file:
