@@ -1,3 +1,4 @@
+from copy import deepcopy
 from enum import Enum
 from typing import List
 
@@ -12,6 +13,7 @@ class Day06:
         self.grid = [list(line) for line in input_str.strip().splitlines()]
         self.__find_start_coords()
         self.visited_positions = set()
+        self.has_loop = False
 
     def __find_start_coords(self):
         symbols = ['^', '>', 'v', '<']
@@ -42,6 +44,11 @@ class Day06:
 
     def step_forward(self):
         self.grid[self.current_X][self.current_Y] = 'X'
+
+        if (self.current_X, self.current_Y, self.current_direction) in self.visited_positions:
+            self.has_loop = True
+            return False
+
         self.visited_positions.add((self.current_X, self.current_Y, self. current_direction))
         if self.is_move_possible():
             match self.current_direction.value:
@@ -60,7 +67,7 @@ class Day06:
 
     def move_forward(self):
         current_symbol = self.current_direction.value
-        while current_symbol != '#':
+        while current_symbol != '#' and current_symbol != 'O':
             has_moved = self.step_forward()
             if has_moved:
                 current_symbol = self.grid[self.current_X][self.current_Y]
@@ -96,15 +103,32 @@ class Day06:
         return len(visited)
 
 def part01():
-    with open("input.txt", 'r') as file:
+    with open("test.txt", 'r') as file:
         content = file.read()
 
     day06 = Day06(content)
     day06.move()
     print(day06.get_visited_positions())
 
+def part02():
+    with open("input.txt", 'r') as file:
+        content = file.read()
+
+    count = 0
+    for i, symbol in enumerate(content):
+        if symbol == '.':
+            new_content = content[:i] + 'O' + content[i+1:]
+            day06part2 = Day06(new_content)
+            day06part2.move()
+            if day06part2.has_loop:
+                count += 1
+
+    print(count)
+
+
 def main():
     part01()
+    part02()
 
 if __name__ == "__main__":
     main()
