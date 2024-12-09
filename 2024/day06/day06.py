@@ -1,12 +1,12 @@
-from copy import deepcopy
 from enum import Enum
-from typing import List
+
 
 class Directions(Enum):
     UP = '^'
     RIGHT = '>'
     DOWN = 'v'
     LEFT = '<'
+
 
 class Day06:
     def __init__(self, input_str):
@@ -49,7 +49,7 @@ class Day06:
             self.has_loop = True
             return False
 
-        self.visited_positions.add((self.current_X, self.current_Y, self. current_direction))
+        self.visited_positions.add((self.current_X, self.current_Y, self.current_direction))
         if self.is_move_possible():
             match self.current_direction.value:
                 case '^':
@@ -63,7 +63,6 @@ class Day06:
             return True
         else:
             return False
-
 
     def move_forward(self):
         current_symbol = self.current_direction.value
@@ -102,6 +101,7 @@ class Day06:
         visited = set((x, y) for x, y, _ in self.visited_positions)
         return len(visited)
 
+
 def part01():
     with open("test.txt", 'r') as file:
         content = file.read()
@@ -110,6 +110,7 @@ def part01():
     day06.move()
     print(day06.get_visited_positions())
 
+
 def part02():
     with open("input.txt", 'r') as file:
         content = file.read()
@@ -117,7 +118,7 @@ def part02():
     count = 0
     for i, symbol in enumerate(content):
         if symbol == '.':
-            new_content = content[:i] + 'O' + content[i+1:]
+            new_content = content[:i] + 'O' + content[i + 1:]
             day06part2 = Day06(new_content)
             day06part2.move()
             if day06part2.has_loop:
@@ -129,6 +130,7 @@ def part02():
 def main():
     part01()
     part02()
+
 
 if __name__ == "__main__":
     main()
