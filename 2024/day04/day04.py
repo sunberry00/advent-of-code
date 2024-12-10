@@ -33,7 +33,7 @@ class Day04:
 
         :param x: Starting row index
         :param y: Starting column index
-        :param puzzle: 2D grid of characters
+        :param puzzle: 2D original_grid of characters
         :param directions: Tuple of row and column direction increments
         :param pattern_length: Length of the slice to create
         :return: Slice of characters
@@ -52,7 +52,7 @@ class Day04:
 
         :param x: Starting row index
         :param y: Starting column index
-        :param puzzle: 2D grid of characters
+        :param puzzle: 2D original_grid of characters
         :param directions: Tuple of row and column direction increments
         :return: Boolean indicating if XMAS pattern is found
         """
@@ -71,7 +71,7 @@ class Day04:
 
         :param x: Row index
         :param y: Column index
-        :param puzzle: 2D grid of characters
+        :param puzzle: 2D original_grid of characters
         :return: 1 if pattern is valid, 0 otherwise
         """
         rows, cols = len(puzzle), len(puzzle[0])
@@ -94,10 +94,10 @@ class Day04:
         """
         Solve part 1 by finding XMAS patterns in all 8 directions.
 
-        :param puzzle: 2D grid of characters
+        :param puzzle: 2D original_grid of characters
         :return: Count of XMAS patterns
         """
-        # Directions: N, NE, E, SE, S, SW, W, NW
+        # Direction: N, NE, E, SE, S, SW, W, NW
         directions = [
             (-1, 0),  # North
             (-1, 1),  # Northeast
@@ -124,7 +124,7 @@ class Day04:
         """
         Solve part 2 by finding 'A' patterns.
 
-        :param puzzle: 2D grid of characters
+        :param puzzle: 2D original_grid of characters
         :return: Count of 'A' patterns
         """
         return sum(

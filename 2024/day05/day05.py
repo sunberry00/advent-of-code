@@ -3,7 +3,7 @@ from typing import List, Tuple
 
 class PageSorter:
     @staticmethod
-    def parse_import_file(filename: str) -> Tuple[List[Tuple[int, int]], List[List[int]]]:
+    def parse_import_file(filename: str) -> tuple[list[tuple[int, ...]], list[list[int]]]:
         """
         Parse a file with two sections of import data.
 
