@@ -35,7 +35,7 @@ class BridgeRepair:
         current = []
 
         for char in text:
-            if char in '*+':
+            if char in '*+|':
                 if current:
                     result.append(''.join(current).strip())
                     current = []
@@ -62,6 +62,8 @@ class BridgeRepair:
                     result += int(ch)
                 elif eq[i-1] == '*':
                     result *= int(ch)
+                elif eq[i-1] == '|':
+                    result = int(str(result) + ch)
         return result
 
     @classmethod
@@ -71,17 +73,25 @@ class BridgeRepair:
 
         sum = BridgeRepair.__check_equation(test_value, numbers.replace(" ", "+", 1))
         mult = BridgeRepair.__check_equation(test_value, numbers.replace(" ", "*", 1))
-        return sum or mult
+        conc = BridgeRepair.__check_equation(test_value, numbers.replace(" ", "|", 1))
+
+        return sum or mult or conc
 
     @staticmethod
-    def solve_part1(content: str) -> None:
+    def solve_part2(content: str) -> None:
+        sum = 0
+        for equation in content:
+            test_value, numbers = BridgeRepair.__parse_equation(equation)
+            if BridgeRepair.__check_equation(test_value, numbers):
+                sum += test_value
 
+        print(sum)
 
 
 def main():
     """Main function to run the solution."""
     input = BridgeRepair.parse_import_file("input.txt")
-    BridgeRepair.solve_part1(input)
+    BridgeRepair.solve_part2(input)
 
 if __name__ == "__main__":
     main()
