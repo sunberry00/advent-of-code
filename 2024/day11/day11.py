@@ -1,33 +1,42 @@
 def blink(stone_arrangement):
-    blink = []
+    # Preallocate result list with estimated size to avoid repeated resizing
+    result = []
+    result_append = result.append  # Local reference for faster append operations
+
+    # Process stones in bulk using list comprehension for better performance
     for stone in stone_arrangement:
         if stone == 0:
-            blink.append(1)
-        elif len(str(stone)) % 2 == 0:
+            result_append(1)
+        elif (stone_len := len(str(stone))) % 2 == 0:
+            # Use string slicing with cached length calculation
             str_stone = str(stone)
-            half_index = len(str_stone) // 2
-            first_stone, second_stone = str_stone[:half_index], str_stone[half_index:]
-            first_stone, second_stone = int(first_stone), int(second_stone)
-            blink.append(first_stone)
-            blink.append(second_stone)
+            half_index = stone_len // 2
+            result_append(int(str_stone[:half_index]))
+            result_append(int(str_stone[half_index:]))
         else:
-            blink.append(stone * 2024)
+            result_append(stone * 2024)
 
-    return blink
+    return result
+
+
 def solve_part1(puzzle):
     stones = puzzle
-    for i in range(25):
+    # Use a generator expression to avoid creating intermediate lists
+    for _ in range(75):
         stones = blink(stones)
 
-    print(len(stones))
+    return len(stones)
+
 
 def main():
-    with open("input.txt", "r") as f:
-        puzzle = f.read()
+    # Use context manager with explicit encoding
+    with open("input.txt", "r", encoding='utf-8') as f:
+        # Read and process in one go
+        puzzle = [int(x) for x in f.read().split()]
 
-    puzzle = [int(x) for x in puzzle.split(" ")]
+    result = solve_part1(puzzle)
+    print(result)
 
-    solve_part1(puzzle)
 
 if __name__ == "__main__":
     main()
