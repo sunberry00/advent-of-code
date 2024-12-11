@@ -18,6 +18,7 @@ def possible_moves(puzzle, x, y, current_height):
             result.add('right')
     return result
 
+
 def backtrack(puzzle, x, y, current_height, end_trails):
     if current_height == 9:
         end_trails.add((x, y))
@@ -41,7 +42,28 @@ def backtrack(puzzle, x, y, current_height, end_trails):
 
     return
 
+def backtrack_2(puzzle, x, y, current_height, unique_trails):
+    if current_height == 9:
+        unique_trails += 1
+        return unique_trails
 
+    if x != 0:
+        if puzzle[x - 1][y] == current_height + 1:
+            unique_trails = backtrack_2(puzzle, x - 1, y, current_height + 1, unique_trails)
+
+    if x != len(puzzle) - 1:
+        if puzzle[x + 1][y] == current_height + 1:
+            unique_trails = backtrack_2(puzzle, x + 1, y, current_height + 1, unique_trails)
+
+    if y != 0:
+        if puzzle[x][y - 1] == current_height + 1:
+            unique_trails = backtrack_2(puzzle, x, y - 1, current_height + 1, unique_trails)
+
+    if y != len(puzzle[0]) - 1:
+        if puzzle[x][y + 1] == current_height + 1:
+            unique_trails = backtrack_2(puzzle, x, y + 1, current_height + 1, unique_trails)
+
+    return unique_trails
 
 
 def solve_part1(puzzle):
@@ -54,6 +76,15 @@ def solve_part1(puzzle):
 
     return sum([len(value) for key, value in result.items()])
 
+def solve_part2(puzzle):
+    trailheads = find_trailheads(puzzle)
+    result = dict()
+    for start_x, start_y in trailheads:
+        unique_trails = 0
+        result[(start_x, start_y)] = backtrack_2(puzzle, start_x, start_y, 0, unique_trails)
+
+    return sum([value for key, value in result.items()])
+
 
 def find_trailheads(puzzle):
     trailheads = set()
@@ -64,12 +95,15 @@ def find_trailheads(puzzle):
 
     return trailheads
 
+
 def main():
     with open("input.txt", "r") as f:
         puzzle = f.read()
 
     puzzle = [[int(num) for num in line] for line in puzzle.split('\n')]
     print(solve_part1(puzzle))
+    print(solve_part2(puzzle))
+
 
 if __name__ == "__main__":
     main()
