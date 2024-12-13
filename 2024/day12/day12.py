@@ -42,6 +42,7 @@ def main():
         puzzle = f.read()
 
     print(solve_part1(puzzle))
+    print(solve_part2(puzzle))
 
 def find_regions(grid):
     rows, cols = len(grid), len(grid[0])
@@ -84,6 +85,99 @@ def find_regions(grid):
                 regions[plant_type].append(region)
 
     return regions
+
+
+def count_sides(region):
+    return count_vertical_sides(region, 'up') + \
+        count_vertical_sides(region, 'down') + \
+        count_horizontal_sides(region, 'left') + \
+        count_horizontal_sides(region, 'right')
+
+
+
+def count_vertical_sides(region, direction):
+    # Group points by row
+    rows = {}
+    for row, col in region:
+        if row not in rows:
+            rows[row] = []
+        rows[row].append(col)
+
+    # Take only points that have an exposed side in the specified direction
+    new_rows = {}
+    for row, cols in rows.items():
+        new_cols = []
+        check_row = row - 1 if direction == 'up' else row + 1
+        for col in cols:
+            if (check_row, col) not in region:
+                new_cols.append(col)
+        if new_cols:  # Only add rows that have exposed sides
+            new_rows[row] = new_cols
+
+    # Count regions in each row
+    total_sides = 0
+    for row, cols in new_rows.items():
+        cols = sorted(cols)
+        regions = 1
+        # Check for gaps in consecutive numbers
+        for i in range(1, len(cols)):
+            if cols[i] - cols[i - 1] > 1:
+                regions += 1
+        total_sides += regions
+
+    return total_sides
+
+
+def count_horizontal_sides(region, direction):
+    # Group points by column
+    cols = {}
+    for row, col in region:
+        if col not in cols:
+            cols[col] = []
+        cols[col].append(row)
+
+    # Take only points that have an exposed side in the specified direction
+    new_cols = {}
+    for col, rows in cols.items():
+        new_rows = []
+        check_col = col - 1 if direction == 'left' else col + 1
+        for row in rows:
+            if (row, check_col) not in region:
+                new_rows.append(row)
+        if new_rows:  # Only add columns that have exposed sides
+            new_cols[col] = new_rows
+
+    # Count regions in each column
+    total_sides = 0
+    for col, rows in new_cols.items():
+        rows = sorted(rows)
+        regions = 1
+        # Check for gaps in consecutive numbers
+        for i in range(1, len(rows)):
+            if rows[i] - rows[i - 1] > 1:
+                regions += 1
+        total_sides += regions
+
+    return total_sides
+
+def solve_part2(input_str):
+    # Convert input to grid
+    grid = input_str.strip().split('\n')
+
+    # Find all regions
+    regions = find_regions(grid)
+
+    total_price = 0
+
+    for plant_type, plant_regions in regions.items():
+        for region in plant_regions:
+            area = len(region)
+            sites = count_sides(region)
+            price = area * sites
+            total_price += price
+
+    return total_price
+
 
 if __name__ == "__main__":
     main()
