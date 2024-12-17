@@ -57,12 +57,43 @@ def solve_part1(puzzle):
 
     return result
 
+def solve_part2(puzzle):
+    robots = puzzle.split('\n')
+
+    robots = [parse_robot(robot) for robot in robots]
+
+    for i in range(10404):
+        for robot in robots:
+            robot.move(1)
+
+        x_s = dict()
+        for robot in robots:
+            a = x_s.get(robot.get_px(), 0)
+            x_s[robot.get_px()] = a + 1
+
+
+        if 31 in x_s.values():
+            pos = {(robot.get_px(), robot.get_py()) for robot in robots}
+            print(i+1)
+            show_grid(pos)
+
+def show_grid(pos):
+    s = ""
+    for i in range(104):
+        for j in range(102):
+            s += '#' if (i, j) in pos else '.'
+        s += '\n'
+    print(s)
+
+
 def main():
     with open("input.txt", "r") as f:
         puzzle = f.read()
 
-    result_part1 = solve_part1(puzzle)
-    print(result_part1)
+    # result_part1 = solve_part1(puzzle)
+    # print(result_part1)
+    solve_part2(puzzle)
+
 
 if __name__ == "__main__":
     main()
