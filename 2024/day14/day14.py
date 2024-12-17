@@ -1,7 +1,7 @@
 import re
 
 class Robot:
-    def __init__(self, px, py, vx, vy):
+    def __init__(self, py, px, vy, vx):
         self.__px = px
         self.__py = py
         self.__vx = vx
